@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package network;
+
+// Message for network state update
+message NetworkState {
+    repeated Node nodes = 1;
+    repeated Link links = 2;
+    int64 timestamp = 3;
+}
+
+message Node {
+    string id = 1;
+    string type = 2; // e.g., "village", "tower", "satellite"
+    float throughput = 3;
+    float latency = 4;
+    string status = 5;
+}
+
+message Link {
+    string source = 1;
+    string target = 2;
+    float utilization = 3;
+    float latency = 4;
+}
+
+// Message for AI optimization command
+message AIAction {
+    string nodeId = 1;
+    string action = 2; // e.g., "activate backup", "re-route"
+    float expectedImprovement = 3;
+    int64 timestamp = 4;
+}
+
+// Simulation service streaming endpoint
+service SimulationService {
+    rpc StreamNetworkState(Empty) returns (stream NetworkState);
+}
+
+// AI optimization service
+service AIOptimizationService {
+    rpc OptimizeNetwork(NetworkState) returns (AIAction);
+}

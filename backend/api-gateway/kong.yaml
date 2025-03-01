@@ -1,0 +1,35 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: rest-api
+    url: http://localhost:5000
+    routes:
+      - name: rest-api-route
+        paths:
+          - /api
+        strip_path: true
+
+  # - name: grpc-service
+  #   url: grpc://backend:9090
+  #   routes:
+  #     - name: grpc-service-route
+  #       paths:
+  #         - /grpc
+  #       protocols:
+  #         - grpc
+
+plugins:
+  - name: rate-limiting
+    service: rest-api
+    config:
+      second: 5
+      minute: 100
+
+  - name: jwt
+    service: rest-api
+
+  - name: file-log
+    service: rest-api
+    config:
+      path: /tmp/kong.log
